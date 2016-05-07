@@ -20,24 +20,34 @@ class SimulateController extends Controller
     {
         switch ($event) {
             case 'bad_night':
-                return $this->triggerBadNight();
+                $this->triggerBadNight();
                 break;
             
             case 'cant_sleep':
-                return $this->triggerCantSleep();
+                $this->triggerCannotSleep();
                 break;
 
             default:
                 print "Unknown event: $event";
                 break;
         }
+
+        return $this->index();
     }
 
 
     public function triggerBadNight()
     {
         Config::advanceClock();
+        // system('say "wake up"');
         // Slack::send("Sorry. Bad night's sleep. Looks like I will be late today");
+
+    }
+
+
+    public function triggerCannotSleep()
+    {
+        system('say "Can you not sleep? Shall I play you a lullaby?"');        
     }
 
 }
