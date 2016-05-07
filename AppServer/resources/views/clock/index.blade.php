@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('meta')            
-<meta http-equiv="refresh" content="1" >
+<meta http-equiv="refresh" content="100" >
 <script>
     function startTime() {
         var today = new Date();
@@ -23,10 +23,9 @@
 @endsection
 
 @section('content')            
-<div style="width: 500px; height:600px; border: 1px solid gray">
+<div style="width: 500px; height:600px; border: 1px solid gray;">
     <div id="clock"></div>
-    <div class="title">Wake at {{ $wakeUpTime or "Not set "}}</div>
-    
+    <div class="title" style="color: black; font-weight: bold">Wake at {{ $wakeUpTime or "Not set "}}</div>
 </div>
 
 <script type="text/javascript">

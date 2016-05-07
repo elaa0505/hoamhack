@@ -3,7 +3,7 @@
 
 <div class="title">Simulate</div>
 <form>
-@foreach (['cant_sleep' => 'Cannot sleep', 'bad_night' => 'Bad night'] as $event => $label)
+@foreach (['cant_sleep' => 'Cannot sleep', 'bad_night' => 'Bad night', 'wake_up' => 'Wake up'] as $event => $label)
 <p><a href="{{ route('simulate.trigger', $event) }}">{{ $label }}</a> </p>
 @endforeach
 

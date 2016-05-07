@@ -27,12 +27,16 @@ class SimulateController extends Controller
                 $this->triggerCannotSleep();
                 break;
 
+            case 'wake_up':
+                $this->triggerWakeUp();
+                break;
+
             default:
                 print "Unknown event: $event";
                 break;
         }
 
-        return $this->index();
+        return \Redirect::route('simulate.index');
     }
 
 
@@ -50,5 +54,10 @@ class SimulateController extends Controller
         system('say "Can you not sleep? Shall I play you a lullaby?"');        
     }
 
+
+    public function triggerWakeUp()
+    {
+        system('say "Please wake up."');        
+    }
 }
 
