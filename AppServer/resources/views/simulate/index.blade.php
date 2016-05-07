@@ -9,8 +9,19 @@
 
 </form>
 
-<script type="text/javascript" src="http://assets.codepen.io/assets/common/stopExecutionOnTimeout-f961f59a28ef4fd551736b43f94620b5.js">
-     speechSynthesis.speak(SpeechSynthesisUtterance('Hello World'));
+
+    <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+<script type="text/javascript">
+if ('speechSynthesis' in window) {
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = "Wake up, please.";
+    msg.volume = 1.0;
+    window.speechSynthesis.speak(msg);
+} 
 </script>
 
 
