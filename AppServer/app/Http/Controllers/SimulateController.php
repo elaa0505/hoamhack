@@ -31,6 +31,10 @@ class SimulateController extends Controller
                 $this->triggerWakeUp();
                 break;
 
+            case 'pre_wake_up':
+                $this->triggerPreWakeUp();
+                break;
+
             default:
                 print "Unknown event: $event";
                 break;
@@ -59,5 +63,12 @@ class SimulateController extends Controller
     {
         system('say "Please wake up."');        
     }
+
+
+    public function triggerPreWakeUp()
+    {
+        system('say "I am going to turn on the heat now."');        
+    }
+
 }
 
