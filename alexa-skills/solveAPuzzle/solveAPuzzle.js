@@ -19,6 +19,10 @@ var puzzles = [
     {
         question: "what's the fourth planet from the sun?",
         answer: "mars"
+    },
+    {
+        question: "what's the best flavor ice cream?",
+        answer: "rocky road"
     }
 ]
 
@@ -86,7 +90,7 @@ function onIntent(intentRequest, session, callback) {
     if ("SilenceAlarm" === intentName) {
         silenceAlarm(intent, session, callback);
     } else if ("AnswerPuzzle" === intentName) {
-        answerPuzzle(callback);
+        answerPuzzle(intent, session, callback);
     } else if ("AMAZON.HelpIntent" === intentName) {
         getWelcomeResponse(callback);
     } else if ("AMAZON.StopIntent" === intentName || "AMAZON.CancelIntent" === intentName) {
@@ -110,7 +114,9 @@ function onSessionEnded(sessionEndedRequest, session) {
 
 function getWelcomeResponse(callback) {
     // If we wanted to initialize the session to have some attributes we could add those here.
-    var sessionAttributes = {};
+    var sessionAttributes = {
+        questionCount: 0
+    };
     var cardTitle = "Welcome";
     var speechOutput = "Good morning, I hope you had a nice sleepy time. " +
         "You can turn off the alarm by saying off";
@@ -134,7 +140,7 @@ function handleSessionEndRequest(callback) {
 
 function silenceAlarm(intent, session, callback) {
     var sessionAttributes = {
-        questionCount: 0
+        questionCount: 0 // session.attributes.questionCount
     };
     var currentQuestion = puzzles[sessionAttributes.questionCount].question
     var formatAnswerLike = 'You can can answer the question by saying, it is foo or the answer is bar' 
@@ -152,9 +158,11 @@ function silenceAlarm(intent, session, callback) {
 }
 
 function answerPuzzle(intent, session, callback) {
+    console.log(' in here!!! ')
+    console.log(session)
     var repromptText = ""; //'I didn\'t get that...' ;
     var sessionAttributes = {
-        questionCount: session.questionCount
+        questionCount: session.attributes.questionCount
     };
     var shouldEndSession = false;
     var currentAnswer = puzzles[sessionAttributes.questionCount].answer;
@@ -165,8 +173,8 @@ function answerPuzzle(intent, session, callback) {
     // use soft equals to coerce types, yay JavaScript
     if (currentAnswer == userAnswer) {
         // end session which will tell the user they are correct
-        // handleSessionEndRequest()
-        speechOutput = "Trello world"
+        speechOutput = "Good job human. Air high five. Proceed to enjoy your day";
+        shouldEndSession = true;
     } else {
         //tell the user the correct answer and move onto the next question
         sessionAttributes.questionCount += 1;
