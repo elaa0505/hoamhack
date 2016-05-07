@@ -20,6 +20,14 @@ Route::get('clock', [
     'uses' => 'ClockController@index', 
     'as' => 'clock.index'] );
 
+Route::get('simulate', [
+    'uses' => 'SimulateController@index', 
+    'as' => 'simulate.index'] );
+
+Route::get('simulate/{event}', [
+    'uses' => 'SimulateController@trigger', 
+    'as' => 'simulate.trigger'] );
+
 
 Route::group( ['prefix' => 'slack'], function()
 {
@@ -33,9 +41,19 @@ Route::group( ['prefix' => 'slack'], function()
 });
 
 
+
 Route::group( ['prefix' => 'api'], function()
 {
     Route::get('config', [
         'uses' => 'APIConfigController@index', 
         'as' => 'api.config.index'] );
+
+    Route::get('config/get/{var}', [
+        'uses' => 'APIConfigController@show', 
+        'as' => 'api.config.show'] );
+
+    Route::get('config/set/{var}', [
+        'uses' => 'APIConfigController@storeOrUpdate', 
+        'as' => 'api.config.storeOrUpdate'] );
+
 });

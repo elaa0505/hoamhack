@@ -13,5 +13,19 @@ class APIConfigController extends Controller
         $items = Config::get();
         return \Response::json($items->toArray());
     }
+
+    public function show($variable)
+    {
+        $config = Config::whereName($variable)->first();
+        return \Response::json($config);
+    }
+
+    public function storeOrUpdate($variable)
+    {
+        $config = Config::firstOrNew(['name' => $variable]);
+        $config->value = \Input::get('value', '');
+        $config->save();
+        return \Response::json($config);
+    }
 }
 
