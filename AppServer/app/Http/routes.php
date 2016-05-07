@@ -12,5 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
+});
+
+Route::group( ['prefix' => 'api'], function()
+{
+    Route::get('config', [
+        'uses' => 'APIConfigController@index', 
+        'as' => 'api.config.index'] );
 });
