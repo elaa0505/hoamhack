@@ -15,6 +15,24 @@ Route::get('/', function () {
     return view('index');
 });
 
+
+Route::get('clock', [
+    'uses' => 'ClockController@index', 
+    'as' => 'clock.index'] );
+
+
+Route::group( ['prefix' => 'slack'], function()
+{
+    Route::get('', [
+        'uses' => 'SlackController@index', 
+        'as' => 'slack.index'] );
+
+    Route::get('send', [
+        'uses' => 'SlackController@send', 
+        'as' => 'slack.send'] );
+});
+
+
 Route::group( ['prefix' => 'api'], function()
 {
     Route::get('config', [

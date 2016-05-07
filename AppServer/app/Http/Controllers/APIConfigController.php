@@ -11,7 +11,7 @@ class APIConfigController extends Controller
     public function index()
     {
         $items = Config::get();
-        return \Response::json($items->toJson());
+        return \Response::json($items->toArray());
     }
 }
 
