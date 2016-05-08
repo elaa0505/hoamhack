@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('meta')            
-<meta http-equiv="refresh" content="100" >
+<meta http-equiv="refresh" content="1" >
 <script>
     function startTime() {
         var today = new Date();

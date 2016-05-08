@@ -4,6 +4,8 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Config;
+use App\Slack;
+use App\Lights;
 
 
 
@@ -19,6 +21,10 @@ class SimulateController extends Controller
     public function trigger($event)
     {
         switch ($event) {
+            case 'reset':
+                $this->triggerReset();
+                break;
+
             case 'bad_night':
                 $this->triggerBadNight();
                 break;
@@ -43,13 +49,19 @@ class SimulateController extends Controller
         return \Redirect::route('simulate.index');
     }
 
+    public function triggerReset()
+    {
+        Config::whereName('sleepstate')->update(['value'=>'sleep']);
+        Config::whereName('alarm')->update(['value'=>0]);
+        Lights::off();
+    }
 
     public function triggerBadNight()
     {
         Config::advanceClock();
-        // system('say "wake up"');
-        // Slack::send("Sorry. Bad night's sleep. Looks like I will be late today");
-
+        system('say "wake up"');
+        Slack::send("/giphy zzz");
+        Slack::send("Sorry. Bad night's sleep. Looks like I will be late today");
     }
 
 
@@ -61,12 +73,15 @@ class SimulateController extends Controller
 
     public function triggerWakeUp()
     {
+        Config::whereName('sleepstate')->update(['value'=>'wakeup']);
         system('say "Please wake up."');        
     }
 
 
     public function triggerPreWakeUp()
     {
+        Config::whereName('sleepstate')->update(['value'=>'prewakeup']);
+        Lights::dimmed();
         system('say "I am going to turn on the heat now."');        
     }
 
