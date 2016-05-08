@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('meta')            
-<meta http-equiv="refresh" content="1" >
+
 <script>
     function startTime() {
         var today = new Date();
@@ -25,13 +25,31 @@
 
 @section('content')            
 
-{{ $sleepState }}
-<div style="width: 500px; height:600px; border: 1px solid gray;">
+
+<div style="width: 500px; height:300px; border: 1px solid gray;">
     <div id="clock"></div>
     <div class="title" style="color: @if ($alarmState=='1')red @else black @endif; font-weight: bold;">Wake at {{ $wakeUpTime or "Not set "}}</div>
 </div>
 
+<div>
+    <h2><b>Connected Devices</b></h2>
+    <div class="well well-sm"><i class="fa fa-coffee fa-3x" aria-hidden="true"></i> <h4>Coffee Maker: @if ($sleepState=='wakeup') Ready @elseif ($sleepState=='prewakeup') Brewing @else Off @endif</h4></div>
+    <div class="well well-sm"><i class="fa fa-coffee fa-3x" aria-hidden="true"></i> <h4>Heater: @if ($sleepState=='wakeup') 22 @elseif ($sleepState=='prewakeup') 25 @else 22 @endif</h4></div>
+    <div class="well well-sm"><i class="fa fa-lightbulb-o fa-3x" aria-hidden="true"></i> <h4>Lights: @if ($sleepState=='wakeup') On @elseif ($sleepState=='prewakeup') Dim @else Off @endif</h4></div>
+</div>
+
 <script type="text/javascript">
     startTime();
+    console.log("{{ $sleepState }}");
+</script>
+
+
+<script type="text/javascript">
+// if ('speechSynthesis' in window) {
+//     var msg = new SpeechSynthesisUtterance();
+//     msg.text = "Wake up, please.";
+//     msg.volume = 1.0;
+//     window.speechSynthesis.speak(msg);
+// } 
 </script>
 @endsection                
