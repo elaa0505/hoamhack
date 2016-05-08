@@ -166,6 +166,7 @@ function setTimer(intent, session, callback) {
         http.get(setAlarmURL + alarmTimeSlot, function(res) {
           console.log('Got response: ' + res.statusCode);
           // consume response body
+          var shouldEndSession = true;
           callback(sessionAttributes,
             buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
           res.resume();
