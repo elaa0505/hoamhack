@@ -53,6 +53,7 @@ class SimulateController extends Controller
     {
         Config::whereName('sleepstate')->update(['value'=>'sleep']);
         Config::whereName('alarm')->update(['value'=>0]);
+        Config::whereName('wakeupat')->update(['value'=>"6:00"]);
         Lights::off();
     }
 
@@ -60,7 +61,6 @@ class SimulateController extends Controller
     {
         Config::advanceClock();
         system('say "wake up"');
-        Slack::send("/giphy zzz");
         Slack::send("Sorry. Bad night's sleep. Looks like I will be late today");
     }
 
@@ -74,7 +74,8 @@ class SimulateController extends Controller
     public function triggerWakeUp()
     {
         Config::whereName('sleepstate')->update(['value'=>'wakeup']);
-        system('say "Please wake up."');        
+        Lights::on();
+        // system('say "Please wake up."');        
     }
 
 

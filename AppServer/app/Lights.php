@@ -7,7 +7,7 @@ class Lights
 {
     public static function send($state, $brightness = null)
     {
-        $data = ['on' => $state, 'sat'=>254, 'hue'=>10000];
+        $data = ['on' => $state, 'sat'=>254, 'hue'=>30000];
         if ($brightness)
         {
             $data["bri"] = $brightness;
