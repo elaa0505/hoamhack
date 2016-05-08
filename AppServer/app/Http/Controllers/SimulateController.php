@@ -69,14 +69,14 @@ class SimulateController extends Controller
     public function triggerBadNight()
     {
         Config::advanceClock();
-        system('say "wake up"');
+        // system('say "wake up"');
         Slack::send("Sorry. Bad night's sleep. Looks like I will be late today");
     }
 
 
     public function triggerCannotSleep()
     {
-        system('say "Can you not sleep? Shall I play you a lullaby?"');        
+        // system('say "Can you not sleep? Shall I play you a lullaby?"');        
     }
 
 
@@ -92,7 +92,7 @@ class SimulateController extends Controller
     {
         Config::whereName('sleepstate')->update(['value'=>'prewakeup']);
         Lights::dimmed();
-        system('say "I am going to turn on the heat now."');        
+        // system('say "I am going to turn on the heat now."');        
     }
 
 }
