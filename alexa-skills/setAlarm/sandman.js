@@ -6,7 +6,7 @@
 var http = require('http');
 
 // URL to call with time the user wants to wake up
-var setAlarmURL = "http://52.34.49.217:8000/api/config/set/wakeupat?value=";
+var setAlarmURL = "http://d0c2bed7.ngrok.io/api/config/set/wakeupat?value=";
 
 // global var with puzzles for the sleepy person to solve
 var puzzles = [
@@ -170,8 +170,7 @@ function setTimer(intent, session, callback) {
         sessionAttributes = {
             alarmTime: alarmTimeSlot
         };
-        speechOutput = "I will set the alarm to " + alarmTimeSlot + ". You can ask me " +
-            "what time the alarm is set";
+        speechOutput = "I will set the alarm to " + alarmTimeSlot;  
         repromptText = "You can ask me what time the alarm is set";
         http.get(setAlarmURL + alarmTimeSlot, function(res) {
           console.log('Got response: ' + res.statusCode);
