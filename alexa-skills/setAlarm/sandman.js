@@ -147,7 +147,7 @@ function getWelcomeResponse(callback) {
 
 function handleSessionEndRequest(callback) {
     var cardTitle = "Session Ended";
-    var speechOutput = "Thank you for talking to me - I'm sandman, your personal sleep assistant!";
+    var speechOutput = "Well that was fun. Have a nice day!";
     // Setting this to true ends the session and exits the skill.
     var shouldEndSession = true;
 
@@ -234,7 +234,7 @@ function answerPuzzle(intent, session, callback) {
     // use soft equals to coerce types, yay JavaScript
     if (currentAnswer == userAnswer) {
         // end session which will tell the user they are correct
-        speechOutput = "Good job human. Air high five. Proceed to enjoy your day";
+        speechOutput = "Air high five. Proceed to enjoy your day";
         shouldEndSession = true;
     } else {
         //tell the user the correct answer and move onto the next question
