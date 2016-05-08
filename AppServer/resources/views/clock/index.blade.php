@@ -34,22 +34,27 @@
 <div>
     <h2><b>Connected Devices</b></h2>
     <div class="well well-sm"><i class="fa fa-coffee fa-3x" aria-hidden="true"></i> <h4>Coffee Maker: @if ($sleepState=='wakeup') Ready @elseif ($sleepState=='prewakeup') Brewing @else Off @endif</h4></div>
-    <div class="well well-sm"><i class="fa fa-coffee fa-3x" aria-hidden="true"></i> <h4>Heater: @if ($sleepState=='wakeup') 22 @elseif ($sleepState=='prewakeup') 25 @else 22 @endif</h4></div>
+    <div class="well well-sm"><i class="fa fa-fire fa-3x" aria-hidden="true"></i> <h4>Heater: @if ($sleepState=='wakeup') 22 @elseif ($sleepState=='prewakeup') 25 @else 22 @endif</h4></div>
     <div class="well well-sm"><i class="fa fa-lightbulb-o fa-3x" aria-hidden="true"></i> <h4>Lights: @if ($sleepState=='wakeup') On @elseif ($sleepState=='prewakeup') Dim @else Off @endif</h4></div>
 </div>
 
 <script type="text/javascript">
     startTime();
-    console.log("{{ $sleepState }}");
 </script>
 
 
 <script type="text/javascript">
-// if ('speechSynthesis' in window) {
-//     var msg = new SpeechSynthesisUtterance();
-//     msg.text = "Wake up, please.";
-//     msg.volume = 1.0;
-//     window.speechSynthesis.speak(msg);
-// } 
+(function(){
+    var sleepState = "{{ $sleepState }}"
+    if (sleepState === "wakeup") {
+        if ('speechSynthesis' in window) {
+            var msg = new SpeechSynthesisUtterance();
+            msg.text = "Good Morning! It is time to wake up.";
+            msg.volume = 1.0;
+            window.speechSynthesis.speak(msg);
+        } 
+    }
+
+})()
 </script>
 @endsection                
