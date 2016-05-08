@@ -32,6 +32,16 @@ var puzzles = [
     }
 ];
 
+// helper function to determine which question the user should iteract with
+function getCurrentQuestion(session) {
+    // if this value is set use it, otherwise default to zero
+    if (session.hasOwnProperty('attributes')&& session.attributes.hasOwnProperty('questionCount')) {
+        return session.attributes.questionCount;
+    } else {
+        return 0;
+    }
+}
+
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
 exports.handler = function (event, context) {
@@ -189,13 +199,13 @@ function setTimer(intent, session, callback) {
  */
 
 function silenceAlarm(intent, session, callback) {
-    var sessionAttributes = { questionCount: session.attributes.questionCount || 0 };
+    var sessionAttributes = { questionCount: getCurrentQuestion(session) };
     var currentQuestion = puzzles[sessionAttributes.questionCount].question;
     var formatAnswerLike = ' You can can answer the question by saying, it is foo or the answer is bar';
     var repromptText = 'I didn\'t get that. I wanted to know ' + 
         currentQuestion + formatAnswerLike;
     var shouldEndSession = false;
-    // var speechOutput = "Here's the deal human. I'll turn off the alarm as soon as you tell me " + currentQuestion;
+    var speechOutput = "Here's the deal human. I'll turn off the alarm as soon as you tell me " + currentQuestion;
 
     // Setting repromptText to null signifies that we do not want to reprompt the user.
     // If the user does not respond or says something that is not understood, the session
@@ -209,10 +219,11 @@ function silenceAlarm(intent, session, callback) {
  * if the user gets the answer correct.
  */
 
+
 function answerPuzzle(intent, session, callback) {
     var repromptText = ""; //'I didn\'t get that...' ;
     var sessionAttributes = {
-        questionCount: session.attributes.questionCount
+        questionCount: getCurrentQuestion(session)
     };
     var shouldEndSession = false;
     var currentAnswer = puzzles[sessionAttributes.questionCount].answer;
