@@ -1,6 +1,12 @@
 /**
- * This function prompts a user to solve a puzzle to turn off their alarm
+ * This function enables the user to set the alarm clock of sandman
+ * and disabel the alarm by solving a puzzle
  */
+
+var http = require('http');
+
+// URL to call with time the user wants to wake up
+var setAlarmURL = "http://52.34.49.217:8000/api/config/set/wakeupat?value=";
 
 // global var with puzzles for the sleepy person to solve
 var puzzles = [
@@ -24,7 +30,17 @@ var puzzles = [
         question: "what's the best flavor ice cream?",
         answer: "rocky road"
     }
-]
+];
+
+// helper function to determine which question the user should iteract with
+function getCurrentQuestion(session) {
+    // if this value is set use it, otherwise default to zero
+    if (session.hasOwnProperty('attributes')&& session.attributes.hasOwnProperty('questionCount')) {
+        return session.attributes.questionCount;
+    } else {
+        return 0;
+    }
+}
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
@@ -87,7 +103,9 @@ function onIntent(intentRequest, session, callback) {
         intentName = intentRequest.intent.name;
 
     // Dispatch to your skill's intent handlers
-    if ("SilenceAlarm" === intentName) {
+    if ("SetTimer" === intentName) {
+        setTimer(intent, session, callback);
+    } else if ("SilenceAlarm" === intentName) {
         silenceAlarm(intent, session, callback);
     } else if ("AnswerPuzzle" === intentName) {
         answerPuzzle(intent, session, callback);
@@ -114,15 +132,13 @@ function onSessionEnded(sessionEndedRequest, session) {
 
 function getWelcomeResponse(callback) {
     // If we wanted to initialize the session to have some attributes we could add those here.
-    var sessionAttributes = {
-        questionCount: 0
-    };
+    var sessionAttributes = {};
     var cardTitle = "Welcome";
-    var speechOutput = "Good morning, I hope you had a nice sleepy time. " +
-        "You can turn off the alarm by saying off";
+    var speechOutput = "Welcome to sandman. " +
+        "You can tell me when I should wake you up. Or you can just configure me";
     // If the user either does not reply to the welcome message or says something that is not
     // understood, they will be prompted again with this text.
-    var repromptText = "I didn't get that. You can turn off the alarm by saying off."
+    var repromptText = "I didn't understand a word, but we love the hoam hackathon from Academic works";
     var shouldEndSession = false;
 
     callback(sessionAttributes,
@@ -131,24 +147,65 @@ function getWelcomeResponse(callback) {
 
 function handleSessionEndRequest(callback) {
     var cardTitle = "Session Ended";
-    var speechOutput = "You got it! Air high five! Have a nice day!";
+    var speechOutput = "Thank you for talking to me - I'm sandman, your personal sleep assistant!";
     // Setting this to true ends the session and exits the skill.
     var shouldEndSession = true;
 
     callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));
 }
 
+/**
+ * Sets the alarm to the time the user wants to wake up
+ */
+function setTimer(intent, session, callback) {
+    var cardTitle = intent.name;
+    var alarmTimeSlot = intent.slots.Time.value;
+    var repromptText = "";
+    var sessionAttributes = {};
+    var shouldEndSession = false;
+    var speechOutput = "";
+
+    // TODO: check if valid time provided
+    if (typeof alarmTimeSlot != 'undefined') {
+        sessionAttributes = {
+            alarmTime: alarmTimeSlot
+        };
+        speechOutput = "I will set the alarm to " + alarmTimeSlot + ". You can ask me " +
+            "what time the alarm is set";
+        repromptText = "You can ask me what time the alarm is set";
+        http.get(setAlarmURL + alarmTimeSlot, function(res) {
+          console.log('Got response: ' + res.statusCode);
+          // consume response body
+          var shouldEndSession = true;
+          callback(sessionAttributes,
+            buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+          res.resume();
+            }).on('error', function(e) {
+          console.log('Got error: ' + e.message);
+        });
+       
+    } else {
+        speechOutput = "I'm not sure what time I should wake you up tomorrow. You can set the alarm by saying wake me up at five pm";
+        repromptText = "I'm not sure what time I should wake you up tomorrow. You can tell me the time " +
+            "by saying, sandman, wake me up at five pm";
+        callback(sessionAttributes,
+            buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+    }
+ 
+}
+
+/**
+ * This function tells the user they can turn off the alarm by solving a question
+ */
+
 function silenceAlarm(intent, session, callback) {
-    var sessionAttributes = {
-        questionCount: 0 // session.attributes.questionCount
-    };
-    var currentQuestion = puzzles[sessionAttributes.questionCount].question
-    var formatAnswerLike = 'You can can answer the question by saying, it is foo or the answer is bar' 
+    var sessionAttributes = { questionCount: getCurrentQuestion(session) };
+    var currentQuestion = puzzles[sessionAttributes.questionCount].question;
+    var formatAnswerLike = ' You can can answer the question by saying, it is foo or the answer is bar';
     var repromptText = 'I didn\'t get that. I wanted to know ' + 
         currentQuestion + formatAnswerLike;
     var shouldEndSession = false;
-    var speechOutput = "Here's the deal human. I'll turn off the alarm as soon as you tell me " 
-         + currentQuestion;
+    var speechOutput = "Here's the deal human. I'll turn off the alarm as soon as you tell me " + currentQuestion;
 
     // Setting repromptText to null signifies that we do not want to reprompt the user.
     // If the user does not respond or says something that is not understood, the session
@@ -157,12 +214,16 @@ function silenceAlarm(intent, session, callback) {
          buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
 }
 
+/**
+ * This function checks the user's answer and turns off the alarm (stops asking questions)
+ * if the user gets the answer correct.
+ */
+
+
 function answerPuzzle(intent, session, callback) {
-    console.log(' in here!!! ')
-    console.log(session)
     var repromptText = ""; //'I didn\'t get that...' ;
     var sessionAttributes = {
-        questionCount: session.attributes.questionCount
+        questionCount: getCurrentQuestion(session)
     };
     var shouldEndSession = false;
     var currentAnswer = puzzles[sessionAttributes.questionCount].answer;
@@ -190,6 +251,7 @@ function answerPuzzle(intent, session, callback) {
     callback(sessionAttributes,
          buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
 }
+
 
 // --------------- Helpers that build all of the responses -----------------------
 
