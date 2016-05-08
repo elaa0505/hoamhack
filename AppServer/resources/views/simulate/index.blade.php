@@ -2,7 +2,6 @@
 @section('content')            
 
 <div class="title">Simulate</div>
-<div class="jumbotron">Simulate</div>
 <form>
 
 @foreach (['reset' => 'Reset', 'bad_night' => 'Bad night', 'pre_wake_up' => "Pre wake up", 'wake_up' => 'Wake up'] as $event => $label)
@@ -13,20 +12,8 @@
 
 
 <script>
+  // not sure what this does
   window.console = window.console || function(t) {};
-</script>
-
-<script>
-  console.log(' hello world')
-</script>
-
-<script type="text/javascript">
-if ('speechSynthesis' in window) {
-    var msg = new SpeechSynthesisUtterance();
-    msg.text = "Wake up, please.";
-    msg.volume = 1.0;
-    window.speechSynthesis.speak(msg);
-} 
 </script>
 
 
