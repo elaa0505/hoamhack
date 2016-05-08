@@ -2,18 +2,23 @@
 @section('content')            
 
 <div class="title">Simulate</div>
+<div class="jumbotron">Simulate</div>
 <form>
-@foreach (['reset' => 'Reset', 'cant_sleep' => 'Cannot sleep', 'bad_night' => 'Bad night', 'pre_wake_up' => "Pre wake up", 'wake_up' => 'Wake up'] as $event => $label)
+
+@foreach (['reset' => 'Reset', 'bad_night' => 'Bad night', 'pre_wake_up' => "Pre wake up", 'wake_up' => 'Wake up'] as $event => $label)
 <p style="font-size:2em; font-weight: bold"><a href="{{ route('simulate.trigger', $event) }}">{{ $label }}</a> </p>
 @endforeach
 
 </form>
 
 
-    <script>
+<script>
   window.console = window.console || function(t) {};
 </script>
 
+<script>
+  console.log(' hello world')
+</script>
 
 <script type="text/javascript">
 if ('speechSynthesis' in window) {

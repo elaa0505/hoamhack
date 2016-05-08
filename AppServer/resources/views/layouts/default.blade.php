@@ -3,6 +3,7 @@
     <head>
         <title>Laravel</title>
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
         @yield('meta')
         <style>
             html, body {
