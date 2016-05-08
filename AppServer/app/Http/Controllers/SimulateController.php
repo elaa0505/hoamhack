@@ -51,6 +51,7 @@ class SimulateController extends Controller
 
     public function triggerReset()
     {
+        Config::firstOrCreate(['name'=>'sleepstate', 'value'=>'sleep']);
         Config::whereName('sleepstate')->update(['value'=>'sleep']);
         Config::whereName('alarm')->update(['value'=>0]);
         Config::whereName('wakeupat')->update(['value'=>"6:00"]);
