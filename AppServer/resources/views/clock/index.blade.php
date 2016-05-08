@@ -25,6 +25,7 @@
 
 @section('content')            
 
+{{ $sleepState }}
 <div style="width: 500px; height:600px; border: 1px solid gray;">
     <div id="clock"></div>
     <div class="title" style="color: @if ($alarmState=='1')red @else black @endif; font-weight: bold;">Wake at {{ $wakeUpTime or "Not set "}}</div>
